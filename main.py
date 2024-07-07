@@ -15,10 +15,11 @@ python main.py --data_path path_to_your_dataset.csv
 """
 
 import re
-import pandas as pd
 import argparse
+
+import pandas as pd
+
 from nltk.tokenize import word_tokenize
-import torch
 from transformers import (
     LLaMAForCausalLM,
     LLaMATokenizer,
@@ -30,7 +31,7 @@ from transformers import (
 
 def preprocess_text(text):
     """
-    Preprocesses the input text by lowercasing, removing special characters,
+    Preprocess the input text by lowercasing, removing special characters,
     and tokenizing.
 
     Args:
