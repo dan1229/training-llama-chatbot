@@ -19,7 +19,14 @@ import pandas as pd
 import argparse
 from nltk.tokenize import word_tokenize
 import torch
-from transformers import LLaMAForCausalLM, LLaMATokenizer, Trainer, TrainingArguments, DataCollatorForLanguageModeling
+from transformers import (
+    LLaMAForCausalLM,
+    LLaMATokenizer,
+    Trainer,
+    TrainingArguments,
+    DataCollatorForLanguageModeling,
+)
+
 
 def preprocess_text(text):
     """
@@ -35,14 +42,15 @@ def preprocess_text(text):
     # Lowercase the text
     text = text.lower()
     # Remove special characters
-    text = re.sub(r'[^a-zA-Z0-9\s]', '', text)
+    text = re.sub(r"[^a-zA-Z0-9\s]", "", text)
     # Tokenize the text
     tokens = word_tokenize(text)
     return tokens
 
+
 def load_data(data_path):
     """
-    Loads and preprocesses the dataset from the specified path.
+    Loads and pre processes the dataset from the specified path.
 
     Args:
         data_path (str): Path to the dataset file.
@@ -53,8 +61,9 @@ def load_data(data_path):
     # Load the dataset
     data = pd.read_csv(data_path)
     # Apply preprocessing
-    data['text'] = data['text'].apply(preprocess_text)
+    data["text"] = data["text"].apply(preprocess_text)
     return data
+
 
 def tokenize_function(tokenizer, examples):
     """
@@ -67,7 +76,10 @@ def tokenize_function(tokenizer, examples):
     Returns:
         dict: The tokenized examples.
     """
-    return tokenizer(examples['text'], truncation=True, padding='max_length', max_length=128)
+    return tokenizer(
+        examples["text"], truncation=True, padding="max_length", max_length=128
+    )
+
 
 def main(data_path):
     """
@@ -80,24 +92,24 @@ def main(data_path):
     data = load_data(data_path)
 
     # Initialize the tokenizer and model
-    tokenizer = LLaMATokenizer.from_pretrained('path_to_pretrained_model')
-    model = LLaMAForCausalLM.from_pretrained('path_to_pretrained_model')
+    tokenizer = LLaMATokenizer.from_pretrained("path_to_pretrained_model")
+    model = LLaMAForCausalLM.from_pretrained("path_to_pretrained_model")
 
     # Tokenize the data
-    tokenized_data = data['text'].apply(lambda x: tokenize_function(tokenizer, x))
+    tokenized_data = data["text"].apply(lambda x: tokenize_function(tokenizer, x))
 
     # Create a data collator
     data_collator = DataCollatorForLanguageModeling(tokenizer=tokenizer, mlm=False)
 
     # Define training arguments
     training_args = TrainingArguments(
-        output_dir='./results',
+        output_dir="./results",
         num_train_epochs=3,
         per_device_train_batch_size=4,
         per_device_eval_batch_size=4,
         warmup_steps=500,
         weight_decay=0.01,
-        logging_dir='./logs',
+        logging_dir="./logs",
         logging_steps=10,
     )
 
@@ -106,16 +118,21 @@ def main(data_path):
         model=model,
         args=training_args,
         data_collator=data_collator,
-        train_dataset=tokenized_data['train'],
-        eval_dataset=tokenized_data['test'],
+        train_dataset=tokenized_data["train"],
+        eval_dataset=tokenized_data["test"],
     )
 
     # Start training
     trainer.train()
 
-if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description="Train a custom AI chat bot using Meta's LLaMA model.")
-    parser.add_argument('--data_path', type=str, required=True, help='Path to the dataset file')
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(
+        description="Train a custom AI chat bot using Meta's LLaMA model."
+    )
+    parser.add_argument(
+        "--data_path", type=str, required=True, help="Path to the dataset file"
+    )
     args = parser.parse_args()
 
     main(args.data_path)
