@@ -30,7 +30,7 @@ python main.py
 
 Read it here!
 
-https://blog.danielnazarian.com/blog/posts/436f560e-f8eb-4c4e-9d37-18adb121584b/
+https://blog.danielnazarian.com/blog/posts/727c8eea-5adb-4062-9026-476e4ccad82c/
 
 -------------------------------------------------------
 ##### [https://danielnazarian.com](https://danielnazarian.com)
