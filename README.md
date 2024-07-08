@@ -27,7 +27,10 @@ python main.py
 ```
 
 ## Blog Post
-TODO
+
+Read it here!
+
+https://blog.danielnazarian.com/blog/posts/436f560e-f8eb-4c4e-9d37-18adb121584b/
 
 -------------------------------------------------------
 ##### [https://danielnazarian.com](https://danielnazarian.com)
